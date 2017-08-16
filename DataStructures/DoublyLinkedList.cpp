@@ -6,7 +6,7 @@ using namespace std;
 struct Node
 {
 	int data;
-	Node *next;
+	Node *next, *prev;
 };
 void display(struct Node *head) {
 	cout <<"<<----------------->>"<<endl;
@@ -16,33 +16,23 @@ void display(struct Node *head) {
 	}
 	cout <<"\n<<----------------->>"<<endl;
 }
-void printRec(Node* head){
-	cout<<head->data<<" ";
-	if(head->next){
-		printRec(head->next);
-	}
-}
-void printReverse(Node* head){
-	if(head->next){
-		printReverse(head->next);
-	}
-	cout<<head->data<<" ";
-}
 Node* initNode(struct Node *head, int n){
 	head=new Node;
 	head->data=n;
 	head->next=0;
+	head->prev=0;
 	return head;
 }
 Node* addNode(struct Node *head, int n) {
 	Node *newNode = new Node;
 	newNode->data = n;
-	newNode->next = NULL;
+	newNode->next = 0;newNode->prev = 0;
 
 	Node *cur = head;
 	while(cur) {
 		if(cur->next == NULL) {
 			cur->next = newNode;
+			newNode->prev=cur;
 			return head;
 		}
 		cur = cur->next;
@@ -51,7 +41,8 @@ Node* addNode(struct Node *head, int n) {
 }
 Node* insertBegin(Node* head, int x){
 	Node* temp=new Node;
-	temp->data=x;temp->next=head;
+	temp->data=x;temp->next=head;temp->prev=0;
+	head->prev=temp;
 	head=temp;
 	return head;
 }
@@ -77,71 +68,44 @@ Node* deleteNode(Node* head, int pos){
 			head=head->next;
 			delete temp;
 		}
-		else
-			head=NULL;
+		else{
+			head->prev=0;
+			head->next=0;
+			head=0;
+		}
 	}
 	else{
 		int i=1;
-		Node* prev=new Node;
+		Node* before=new Node;
 		Node* cur=new Node;Node* after=new Node;
-		prev=head;
+		before=head;
 		cur=head->next;
 		after=cur->next;
 		while(i<pos){
-			prev=cur;
+			before=cur;
 			cur=after;
 			after=after->next;
 			++i;
 		}
-		prev->next=after;
+		before->next=after;
+		if(after)
+			after->prev=before;
 		delete cur;
 	}
 	return head;
 }
-Node* reverseSLL(Node* head){
-	Node* temp=head;
-	if(!head->next)//single element
-		return head;
-	Node *before=head,*cur=head->next,*after=head->next->next;
-	before->next=NULL;
-	while(after){
-		cur->next=before;
-		before=cur;
-		cur=after;
-		after=after->next;
-	}
-	cur->next=before;
-	head=cur;
-	return cur;
-}
-Node* reverseSLLRec(Node* head){
-	if(head->next==NULL){
-		return head;
-	}
-	Node* temp=reverseSLLRec(head->next);
-	head->next->next=head;
-	head->next=NULL;
-	return temp;
-	
-}
-int main(int argc, char const *argv[]){
-	struct Node *head;// = new Node;
-	head=initNode(head,10);
+int main(int argc, char const *argv[])
+{
+	Node* head=NULL;
+	head=initNode(head,2);display(head);
 	head=addNode(head,12);
 	display(head);
-	head=insertBegin(head,8);
+	head=insertBegin(head,32);
 	display(head);
-	head=insertMiddle(head, 2, 20);
-	display(head);
-	printRec(head);
-	cout<<"\n";
-	printReverse(head);
-	cout<<"\n";
-	display(head);
-	head=reverseSLL(head);
-	printRec(head);
-	cout<<"\n";
-	head=reverseSLLRec(head);
-	display(head);
+	int i=0;
+	while(i++<3){
+		head=deleteNode(head,0);
+		display(head);
+	}
 	return 0;
 }
