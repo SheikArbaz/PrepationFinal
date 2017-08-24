@@ -124,6 +124,37 @@ Node* reverseSLLRec(Node* head){
 	return temp;
 	
 }
+/*
+  Remove all duplicate elements from a sorted linked list
+  Node is defined as 
+  struct Node
+  {
+     int data;
+     struct Node *next;
+  }
+*/
+Node* RemoveDuplicates(Node *head){
+    if(!head)
+        return NULL;
+    if(!head->next)
+        return head;
+    int x=head->data;
+    Node* temp=head->next;
+    Node* before=head;
+    while(temp->next){
+        if(temp->data == x){
+            before->next=temp->next;
+        }
+        else{
+            x=temp->data;
+        }
+        temp=temp->next;
+    }
+    while
+  // This is a "method-only" submission. 
+  // You only need to complete this method. 
+}
+
 int main(int argc, char const *argv[]){
 	struct Node *head;// = new Node;
 	head=initNode(head,10);
