@@ -30,16 +30,16 @@ void preorder(Node* root){
 void postorder(Node* root){
 	if(!root)
 		return;
-	preorder(root->llink);
-	preorder(root->rlink);
+	postorder(root->llink);
+	postorder(root->rlink);
 	cout<<root->data<<" ";
 }
 void inorder(Node* root){
 	if(!root)
 		return;
-	preorder(root->llink);
+	inorder(root->llink);
 	cout<<root->data<<" ";
-	preorder(root->rlink);
+	inorder(root->rlink);
 }
 Node* search(Node* root, int data){//returns NULL or node found
     if (root == NULL || root->data == data)
